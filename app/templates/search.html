@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Search{% endblock %}
+
+{% block content %}
+  <h1>Search Results</h1>
+    <p>Search results for: {{ q }}</p>
+    <ul>
+        <h2>
+            Users
+        </h2>
+      {% for user in users %}
+        <div class="card mb-3 p-2">
+            <a href="{{ url_for('main.profile', username=user.username) }}">{{ user.username }}</a>
+            {% if user == current_user %}
+            {% else %}
+            {% if current_user.is_following(user) %}
+            <form method="POST" action="{{ url_for('main.unfollow', username=user.username) }}">
+              <button type="submit" class="btn btn-danger">Unfollow</button>
+            </form>
+            {% else %}
+            <form method="POST" action="{{ url_for('main.follow', username=user.username) }}">
+              <button type="submit" class="btn btn-primary">Follow</button>
+            </form>
+            {% endif %}
+            {% endif %}
+        </div>
+      {% endfor %}
+        <h2>
+            Tweets
+        </h2>
+        {% for tweet in tweets %}
+        <!-- red background at hover-->
+        <a class="text-dark text-decoration-none" 
+        href="{{ url_for('main.tweet_detail', tweet_id=tweet.id) }}">
+            <div class="card mb-3 p-2">
+                <div class="card-body">
+                  <h5 class="card-title">{{ tweet.author.username }}</h5>
+                  <p class="card-text">{{ tweet.body }}</p>
+                  <p class="card-text"><small class="text-muted">{{ tweet.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small></p>
+                  <div class="d-flex justify-content-between">
+
+                  <form method="POST" action="{{ url_for('main.like', tweet_id=tweet.id) }}">
+                    {% if tweet.is_liked_by(current_user) %}
+                    <button type="submit" class="btn">
+                      <i class="bi bi-heart-fill"></i>
+                      <span>
+                        {{ tweet.num_likes }}
+                      </span>
+                    </button>
+                    
+                    {% else %}
+                    <button type="submit" class="btn">
+                      <i class="bi bi-heart"></i>
+                      <span>
+                        {{ tweet.num_likes }}
+                      </span>
+                    </button>
+                    
+                    {% endif %}
+                  </form>
+
+                  {% if tweet.is_owned_by(current_user) %}
+                  <form method="POST" action="{{ url_for('main.delete_tweet', tweet_id=tweet.id) }}">
+                    <button type="submit" class="btn" onclick="return confirm('Are you sure?')">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </form>
+                  {% endif %}
+                </div>
+                  
+                </div>
+              </div>
+            </a>
+        {% endfor %}
+    </ul>
+{% endblock %}

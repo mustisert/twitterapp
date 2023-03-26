@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Tweet{% endblock %}
+
+{% block content %}
+  <h1>Tweet</h1>
+  <div class="card mb-3">
+    <div class="card-body">
+      <h5 class="card-title">{{ tweet.author.username }}</h5>
+      <p class="card-text">{{ tweet.body }}</p>
+      <p class="card-text"><small class="text-muted">{{ tweet.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small></p>
+      <form method="POST" action="{{ url_for('main.like', tweet_id=tweet.id) }}">
+        {% if tweet.is_liked_by(current_user) %}
+        <button type="submit" class="btn">
+          <i class="bi bi-heart-fill"></i>
+          <span>
+            {{ tweet.num_likes }}
+          </span>
+        </button>
+        {% else %}
+        <button type="submit" class="btn">
+          <i class="bi bi-heart"></i>
+          <span>
+            {{ tweet.num_likes }}
+          </span>
+        </button>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+{% endblock %}

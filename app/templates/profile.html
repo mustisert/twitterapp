@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+  <h1>
+    {{ user.username }}
+    {% if user == current_user %}
+    <a href="{{ url_for('main.update_profile', username=current_user.username) }}" class="btn btn-primary">Edit Profile</a>
+    {% else %}
+    {% if current_user.is_following(user) %}
+    <form method="POST" action="{{ url_for('main.unfollow', username=user.username) }}">
+      <button type="submit" class="btn btn-danger">Unfollow</button>
+    </form>
+    {% else %}
+    <form method="POST" action="{{ url_for('main.follow', username=user.username) }}">
+      <button type="submit" class="btn btn-primary">Follow</button>
+    </form>
+    {% endif %}
+    {% endif %}
+  </h1>
+  {% if user.about_me %}
+  <p>{{ user.about_me }}</p>
+  {% endif %}
+  <p>Followers: {{ user.followers.count() }}</p>
+  <p>Following: {{ user.followed.count() }}</p>
+  <hr>
+  <h2>Tweets</h2>
+  {% for tweet in tweets %}
+  <div class="card mb-3">
+    <div class="card-body">
+      <h5 class="card-title">{{ tweet.author.username }}</h5>
+      <p class="card-text">{{ tweet.body }}</p>
+      <p class="card-text"><small class="text-muted">{{ tweet.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small></p>
+      
+      <div class="d-flex justify-content-between">
+      <form method="POST" action="{{ url_for('main.like', tweet_id=tweet.id) }}">
+        {% if tweet.is_liked_by(current_user) %}
+        <button type="submit" class="btn">
+          <i class="bi bi-heart-fill"></i>
+          <span>
+            {{ tweet.num_likes }}
+          </span>
+        </button>
+        
+        {% else %}
+        <button type="submit" class="btn">
+          <i class="bi bi-heart"></i>
+          <span>
+            {{ tweet.num_likes }}
+          </span>
+        </button>
+        
+        {% endif %}
+      </form>
+
+      {% if tweet.is_owned_by(current_user) %}
+                  <form method="POST" action="{{ url_for('main.delete_tweet', tweet_id=tweet.id) }}">
+                    <button type="submit" class="btn" onclick="return confirm('Are you sure?')">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </form>
+      {% endif %}
+    </div>
+    </div>
+  </div>
+  {% endfor %}
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+  <h1>Register</h1>
+  <form method="POST" action="{{ url_for('main.register') }}">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+      {{ form.username.label }} {{ form.username(size=32, class_="form-control") }}
+      {% for error in form.username.errors %}
+      <span class="text-danger">{{ error }}</span>
+      {% endfor %}
+    </div>
+    <div class="mb-3">
+      {{ form.email.label }} {{ form.email(size=32, class_="form-control") }}
+      {% for error in form.email.errors %}
+      <span class="text-danger">{{ error }}</span>
+      {% endfor %}
+    </div>
+    <div class="mb-3">
+      {{ form.password.label }} {{ form.password(size=32, class_="form-control") }}
+      {% for error in form.password.errors %}
+      <span class="text-danger">{{ error }}</span>
+      {% endfor %}
+    </div>
+    <div class="mb-3">
+      {{ form.confirm_password.label }} {{ form.confirm_password(size=32, class_="form-control") }}
+      {% for error in form.confirm_password.errors %}
+      <span class="text-danger">{{ error }}</span>
+      {% endfor %}
+    </div>
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">Register</button>
+    </div>
+  </form>
+
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-primary">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+{% block body %}{% endblock %}
+{% endblock %}

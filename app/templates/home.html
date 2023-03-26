@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+  <h1>Home</h1>
+  {% if current_user.is_authenticated %}
+  <p>Welcome, {{ current_user.username }}!</p>
+  {% else %}
+  <p>Welcome to our site!</p>
+  {% endif %}
+  <hr>
+  {% if current_user.is_authenticated %}
+  <div class="card mb-3">
+    <div class="card-header">
+      <h2 class="mb-0">Post a tweet</h2>
+    </div>
+    <div class="card-body">
+      <form method="POST" action="{{ url_for('main.tweet') }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+          {{ form.content.label(class_="form-label") }}
+          {{ form.content(class_="form-control", placeholder="What's on your mind?") }}
+          {% for error in form.content.errors %}
+          <div class="invalid-feedback">{{ error }}</div>
+          {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary m-2">
+          <i class="bi bi-chat-left-text"></i>
+          <span>
+            Tweet
+          </span>
+        </button>
+      </form>
+    </div>
+  </div>
+  {% endif %}
+  <h2>Feed</h2>
+  {% for tweet in tweets %}
+  <div class="card mb-3">
+    <div class="card-body">
+      <h5 class="card-title">{{ tweet.author.username }}</h5>
+      <p class="card-text">{{ tweet.body }}</p>
+      <p class="card-text"><small class="text-muted">{{ tweet.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small></p>
+      <form method="POST" action="{{ url_for('main.like', tweet_id=tweet.id) }}">
+        {{ form.hidden_tag() }}
+        {% if tweet.is_liked_by(current_user) %}
+        <button type="submit" class="btn">
+          <i class="bi bi-heart-fill"></i>
+          <span>
+            {{ tweet.num_likes }}
+          </span>
+        </button>
+        
+        {% else %}
+        <button type="submit" class="btn">
+          <i class="bi bi-heart"></i>
+          <span>
+            {{ tweet.num_likes }}
+          </span>
+        </button>
+        
+        {% endif %}
+      </form>
+    </div>
+  </div>
+  {% endfor %}
+{% endblock %}

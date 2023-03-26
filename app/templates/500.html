@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Unexpected error has encounterred{% endblock %}
+
+
+
+{% block content %}
+
+  <h1>Unexpected error has encounterred</h1>
+
+  <p>Please contact your contact administrator. Sorry for the inconvinence</p>
+  
+  <a href="{{ url_for('main.home') }}">Back to homepage</a>
+
+{% endblock %}

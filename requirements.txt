@@ -1,0 +1,9 @@
+email_validator
+Flask
+Flask_Login
+flask_sqlalchemy
+Flask_WTF
+gunicorn
+SQLAlchemy
+Werkzeug
+WTForms

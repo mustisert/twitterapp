@@ -1,3 +1,4 @@
+python-dotenv
 email_validator
 Flask
 Flask_Login
@@ -7,3 +8,6 @@ gunicorn
 SQLAlchemy
 Werkzeug
 WTForms
+mysqlclient
+pymysql
+Flask-Migrate

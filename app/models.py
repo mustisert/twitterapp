@@ -66,6 +66,13 @@ class User(UserMixin, db.Model):
         f = self.followed.filter_by(followed_id=user.id).first()
         if f:
             db.session.delete(f)
+            
+    def to_dict(self):
+        user_dict = {
+            'id': self.id,
+            'username': self.username,
+        }
+        return user_dict
 
 
     
